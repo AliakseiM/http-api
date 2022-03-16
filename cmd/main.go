@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	config "http-api/internal/config"
 	"http-api/internal/handler"
 	"http-api/internal/restapi"
 	"http-api/internal/restapi/operations"
@@ -13,6 +14,8 @@ import (
 )
 
 func main() {
+	cfg := config.NewConfig()
+
 	g, _ := errgroup.WithContext(context.Background())
 
 	g.Go(func() error {
@@ -28,8 +31,10 @@ func main() {
 		server := restapi.NewServer(api)
 		defer server.Shutdown()
 
-		server.Host = "0.0.0.0"
-		server.Port = 8080
+		server.Host = cfg.ApiHost
+		server.Port = cfg.ApiPort
+
+		server.ConfigureAPI()
 
 		return server.Serve()
 	})
