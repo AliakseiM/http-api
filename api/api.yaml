@@ -1,0 +1,28 @@
+swagger: "2.0"
+info:
+  title: "HTTP API skeleton"
+  version: "0.0.1"
+basePath: "/api/v1"
+
+paths:
+  /health:
+    get:
+      tags:
+        - debug
+      summary: "Health check"
+      operationId: "health"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Success"
+
+definitions:
+  Success:
+    type: object
+    properties:
+      message:
+        type: string
+        example: "OK"
