@@ -8,8 +8,10 @@ package models
 import (
 	"context"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // Success success
@@ -17,13 +19,31 @@ import (
 // swagger:model Success
 type Success struct {
 
-	// message
-	// Example: OK
-	Message string `json:"message,omitempty"`
+	// is leap
+	// Required: true
+	IsLeap *bool `json:"isLeap"`
 }
 
 // Validate validates this success
 func (m *Success) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateIsLeap(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Success) validateIsLeap(formats strfmt.Registry) error {
+
+	if err := validate.Required("isLeap", "body", m.IsLeap); err != nil {
+		return err
+	}
+
 	return nil
 }
 

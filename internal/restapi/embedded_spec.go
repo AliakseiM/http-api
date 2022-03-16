@@ -20,26 +20,46 @@ func init() {
 	SwaggerJSON = json.RawMessage([]byte(`{
   "swagger": "2.0",
   "info": {
-    "title": "skeleton",
+    "title": "Leap",
     "version": "0.0.1"
   },
   "basePath": "/api/v1",
   "paths": {
-    "/health": {
+    "/isleap": {
       "get": {
         "produces": [
           "application/json"
         ],
-        "tags": [
-          "debug"
+        "summary": "Is given year leap or not",
+        "operationId": "leapYear",
+        "parameters": [
+          {
+            "maximum": 9999,
+            "minimum": -9999,
+            "type": "integer",
+            "description": "Year",
+            "name": "year",
+            "in": "query",
+            "required": true
+          }
         ],
-        "summary": "Health check",
-        "operationId": "health",
         "responses": {
           "200": {
             "description": "Success",
             "schema": {
               "$ref": "#/definitions/Success"
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -47,12 +67,22 @@ func init() {
     }
   },
   "definitions": {
-    "Success": {
+    "Error": {
       "type": "object",
       "properties": {
         "message": {
-          "type": "string",
-          "example": "OK"
+          "type": "string"
+        }
+      }
+    },
+    "Success": {
+      "type": "object",
+      "required": [
+        "isLeap"
+      ],
+      "properties": {
+        "isLeap": {
+          "type": "boolean"
         }
       }
     }
@@ -61,26 +91,46 @@ func init() {
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
   "swagger": "2.0",
   "info": {
-    "title": "skeleton",
+    "title": "Leap",
     "version": "0.0.1"
   },
   "basePath": "/api/v1",
   "paths": {
-    "/health": {
+    "/isleap": {
       "get": {
         "produces": [
           "application/json"
         ],
-        "tags": [
-          "debug"
+        "summary": "Is given year leap or not",
+        "operationId": "leapYear",
+        "parameters": [
+          {
+            "maximum": 9999,
+            "minimum": -9999,
+            "type": "integer",
+            "description": "Year",
+            "name": "year",
+            "in": "query",
+            "required": true
+          }
         ],
-        "summary": "Health check",
-        "operationId": "health",
         "responses": {
           "200": {
             "description": "Success",
             "schema": {
               "$ref": "#/definitions/Success"
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -88,12 +138,22 @@ func init() {
     }
   },
   "definitions": {
-    "Success": {
+    "Error": {
       "type": "object",
       "properties": {
         "message": {
-          "type": "string",
-          "example": "OK"
+          "type": "string"
+        }
+      }
+    },
+    "Success": {
+      "type": "object",
+      "required": [
+        "isLeap"
+      ],
+      "properties": {
+        "isLeap": {
+          "type": "boolean"
         }
       }
     }

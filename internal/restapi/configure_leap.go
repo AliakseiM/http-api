@@ -11,16 +11,15 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 
 	"http-api/internal/restapi/operations"
-	"http-api/internal/restapi/operations/debug"
 )
 
-//go:generate swagger generate server --target ../../internal --name Skeleton --spec ../../api/api.yaml --principal interface{} --exclude-main
+//go:generate swagger generate server --target ../../internal --name Leap --spec ../../api/api.yaml --principal interface{} --exclude-main
 
-func configureFlags(api *operations.SkeletonAPI) {
+func configureFlags(api *operations.LeapAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.SkeletonAPI) http.Handler {
+func configureAPI(api *operations.LeapAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
@@ -38,9 +37,9 @@ func configureAPI(api *operations.SkeletonAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	if api.DebugHealthHandler == nil {
-		api.DebugHealthHandler = debug.HealthHandlerFunc(func(params debug.HealthParams) middleware.Responder {
-			return middleware.NotImplemented("operation debug.Health has not yet been implemented")
+	if api.LeapYearHandler == nil {
+		api.LeapYearHandler = operations.LeapYearHandlerFunc(func(params operations.LeapYearParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.LeapYear has not yet been implemented")
 		})
 	}
 

@@ -1,16 +1,22 @@
 swagger: "2.0"
 info:
-  title: "skeleton"
+  title: "Leap"
   version: "0.0.1"
 basePath: "/api/v1"
 
 paths:
-  /health:
+  /isleap:
     get:
-      tags:
-        - debug
-      summary: "Health check"
-      operationId: "health"
+      summary: "Is given year leap or not"
+      operationId: "leapYear"
+      parameters:
+        - in: query
+          name: year
+          type: integer
+          required: true
+          description: "Year"
+          minimum: -9999
+          maximum: 9999
       produces:
         - application/json
       responses:
@@ -18,11 +24,27 @@ paths:
           description: "Success"
           schema:
             $ref: "#/definitions/Success"
+        "400":
+          description: "bad request"
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: "internal server error"
+          schema:
+            $ref: '#/definitions/Error'
+
 
 definitions:
   Success:
     type: object
+    required:
+      - isLeap
+    properties:
+      isLeap:
+        type: boolean
+
+  Error:
+    type: object
     properties:
       message:
-        type: string
-        example: "OK"
+        type: "string"

@@ -24,9 +24,9 @@ func main() {
 			return err
 		}
 
-		api := operations.NewSkeletonAPI(swaggerSpec)
+		api := operations.NewLeapAPI(swaggerSpec)
 
-		api.DebugHealthHandler = handler.NewHealth()
+		api.LeapYearHandler = handler.NewIsLeap()
 
 		server := restapi.NewServer(api)
 		defer server.Shutdown()

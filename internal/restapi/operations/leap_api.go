@@ -18,13 +18,11 @@ import (
 	"github.com/go-openapi/spec"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-
-	"http-api/internal/restapi/operations/debug"
 )
 
-// NewSkeletonAPI creates a new Skeleton instance
-func NewSkeletonAPI(spec *loads.Document) *SkeletonAPI {
-	return &SkeletonAPI{
+// NewLeapAPI creates a new Leap instance
+func NewLeapAPI(spec *loads.Document) *LeapAPI {
+	return &LeapAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
 		defaultConsumes:     "application/json",
@@ -44,14 +42,14 @@ func NewSkeletonAPI(spec *loads.Document) *SkeletonAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
-		DebugHealthHandler: debug.HealthHandlerFunc(func(params debug.HealthParams) middleware.Responder {
-			return middleware.NotImplemented("operation debug.Health has not yet been implemented")
+		LeapYearHandler: LeapYearHandlerFunc(func(params LeapYearParams) middleware.Responder {
+			return middleware.NotImplemented("operation LeapYear has not yet been implemented")
 		}),
 	}
 }
 
-/*SkeletonAPI the skeleton API */
-type SkeletonAPI struct {
+/*LeapAPI the leap API */
+type LeapAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -83,8 +81,8 @@ type SkeletonAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
-	// DebugHealthHandler sets the operation handler for the health operation
-	DebugHealthHandler debug.HealthHandler
+	// LeapYearHandler sets the operation handler for the leap year operation
+	LeapYearHandler LeapYearHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -106,52 +104,52 @@ type SkeletonAPI struct {
 }
 
 // UseRedoc for documentation at /docs
-func (o *SkeletonAPI) UseRedoc() {
+func (o *LeapAPI) UseRedoc() {
 	o.useSwaggerUI = false
 }
 
 // UseSwaggerUI for documentation at /docs
-func (o *SkeletonAPI) UseSwaggerUI() {
+func (o *LeapAPI) UseSwaggerUI() {
 	o.useSwaggerUI = true
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *SkeletonAPI) SetDefaultProduces(mediaType string) {
+func (o *LeapAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *SkeletonAPI) SetDefaultConsumes(mediaType string) {
+func (o *LeapAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *SkeletonAPI) SetSpec(spec *loads.Document) {
+func (o *LeapAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *SkeletonAPI) DefaultProduces() string {
+func (o *LeapAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *SkeletonAPI) DefaultConsumes() string {
+func (o *LeapAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *SkeletonAPI) Formats() strfmt.Registry {
+func (o *LeapAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *SkeletonAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *LeapAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the SkeletonAPI
-func (o *SkeletonAPI) Validate() error {
+// Validate validates the registrations in the LeapAPI
+func (o *LeapAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -162,8 +160,8 @@ func (o *SkeletonAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.DebugHealthHandler == nil {
-		unregistered = append(unregistered, "debug.HealthHandler")
+	if o.LeapYearHandler == nil {
+		unregistered = append(unregistered, "LeapYearHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -174,23 +172,23 @@ func (o *SkeletonAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *SkeletonAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *LeapAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *SkeletonAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+func (o *LeapAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 	return nil
 }
 
 // Authorizer returns the registered authorizer
-func (o *SkeletonAPI) Authorizer() runtime.Authorizer {
+func (o *LeapAPI) Authorizer() runtime.Authorizer {
 	return nil
 }
 
 // ConsumersFor gets the consumers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *SkeletonAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *LeapAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 	result := make(map[string]runtime.Consumer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -207,7 +205,7 @@ func (o *SkeletonAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consu
 
 // ProducersFor gets the producers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *SkeletonAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *LeapAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 	result := make(map[string]runtime.Producer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -223,7 +221,7 @@ func (o *SkeletonAPI) ProducersFor(mediaTypes []string) map[string]runtime.Produ
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *SkeletonAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *LeapAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -238,8 +236,8 @@ func (o *SkeletonAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	return h, ok
 }
 
-// Context returns the middleware context for the skeleton API
-func (o *SkeletonAPI) Context() *middleware.Context {
+// Context returns the middleware context for the leap API
+func (o *LeapAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -247,7 +245,7 @@ func (o *SkeletonAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *SkeletonAPI) initHandlerCache() {
+func (o *LeapAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 	if o.handlers == nil {
 		o.handlers = make(map[string]map[string]http.Handler)
@@ -256,12 +254,12 @@ func (o *SkeletonAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/health"] = debug.NewHealth(o.context, o.DebugHealthHandler)
+	o.handlers["GET"]["/isleap"] = NewLeapYear(o.context, o.LeapYearHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *SkeletonAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *LeapAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -274,24 +272,24 @@ func (o *SkeletonAPI) Serve(builder middleware.Builder) http.Handler {
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middleware as you see fit
-func (o *SkeletonAPI) Init() {
+func (o *LeapAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}
 }
 
 // RegisterConsumer allows you to add (or override) a consumer for a media type.
-func (o *SkeletonAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
+func (o *LeapAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
 	o.customConsumers[mediaType] = consumer
 }
 
 // RegisterProducer allows you to add (or override) a producer for a media type.
-func (o *SkeletonAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
+func (o *LeapAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
 }
 
 // AddMiddlewareFor adds a http middleware to existing handler
-func (o *SkeletonAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
+func (o *LeapAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
 	um := strings.ToUpper(method)
 	if path == "/" {
 		path = ""
