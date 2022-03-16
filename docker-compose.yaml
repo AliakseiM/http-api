@@ -1,0 +1,11 @@
+version: "3"
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "8085"
+    ports:
+      - "8085:8085"
