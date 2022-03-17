@@ -37,7 +37,7 @@ func init() {
             "maximum": 9999,
             "minimum": -9999,
             "type": "integer",
-            "description": "Year",
+            "description": "Year in range between -9999 to 9999, except 0",
             "name": "year",
             "in": "query",
             "required": true
@@ -108,7 +108,7 @@ func init() {
             "maximum": 9999,
             "minimum": -9999,
             "type": "integer",
-            "description": "Year",
+            "description": "Year in range between -9999 to 9999, except 0",
             "name": "year",
             "in": "query",
             "required": true

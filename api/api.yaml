@@ -14,7 +14,7 @@ paths:
           name: year
           type: integer
           required: true
-          description: "Year"
+          description: "Year in range between -9999 to 9999, except 0"
           minimum: -9999
           maximum: 9999
       produces:

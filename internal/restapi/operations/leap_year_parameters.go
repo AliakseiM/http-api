@@ -33,7 +33,7 @@ type LeapYearParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*Year
+	/*Year in range between -9999 to 9999, except 0
 	  Required: true
 	  Maximum: 9999
 	  Minimum: -9999
