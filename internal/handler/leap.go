@@ -14,16 +14,19 @@ func NewIsLeap() *IsLeap {
 }
 
 func (IsLeap) Handle(p operations.LeapYearParams) middleware.Responder {
-	if p.Year == 0 {
-		return operations.NewLeapYearInternalServerError()
+	year := p.Year
+	switch {
+	case year == 0:
+		return operations.NewLeapYearBadRequest().WithPayload(&models.Error{
+			Message: "the Gregorian calendar does not have a year \"0\"",
+		})
+	case year < 1:
+		year += 1
+		fallthrough
+	default:
+		leap := year%4 == 0 && year%100 != 0 || year%400 == 0
+		return operations.NewLeapYearOK().WithPayload(&models.Success{
+			IsLeap: &leap,
+		})
 	}
-
-	var leap bool
-	if p.Year%4 == 0 && p.Year%100 != 0 || p.Year%400 == 0 {
-		leap = true
-	}
-
-	return operations.NewLeapYearOK().WithPayload(&models.Success{
-		IsLeap: &leap,
-	})
 }
